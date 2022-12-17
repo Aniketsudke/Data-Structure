@@ -36,13 +36,13 @@ int main()
     do
     {
         printf("<-----------MIT Medical Store---------->\n");
-        printf("1)Add Medicine\t");
-        printf("2)Display\t");
-        printf("3)Remove Item\t");
-        printf("4)Search Item\t");
-        printf("5)Stock Detail\n");
-        printf("6)Bill\n");
-        printf("Press Option :");
+        printf("\n1)Add Medicine\t");
+        printf("\n2)Display\t");
+        printf("\n3)Remove Item\t");
+        printf("\n4)Search Item\t");
+        printf("\n5)Stock Detail\n");
+        printf("\n6)Bill\n");
+        printf("\nPress Option :");
         scanf("%d", &switch_main);
         switch (switch_main)
         {
