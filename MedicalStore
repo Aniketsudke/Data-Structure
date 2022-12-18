@@ -35,19 +35,20 @@ int main()
     int Product_ID, choice_main, switch_main;
     do
     {
-        printf("<-----------MIT Medical Store---------->\n");
-        printf("1)Add Medicine\t");
-        printf("2)Display\t");
-        printf("3)Remove Item\t");
-        printf("4)Search Item\t");
-        printf("5)Stock Detail\n");
-        printf("6)Bill\n");
-        printf("Press Option :");
+        printf("\n\n\t<---------------- MIT Medical Store --------------->\n\n");
+        printf("\t\t1)Add Medicine\n");
+        printf("\t\t2)Display\n");
+        printf("\t\t3)Remove Item\n");
+        printf("\t\t4)Search Item\n");
+        printf("\t\t5)Stock Detail\n");
+        printf("\t\t6)Bill\n");
+        printf("\t\tPress Option :");
         scanf("%d", &switch_main);
         switch (switch_main)
         {
         case 1:
             Add_Item();
+            system("cls");
             break;
         case 2:
             Display_DataBase(Head_Item);
@@ -70,11 +71,9 @@ int main()
         default:
             break;
         }
-
-        printf("\nDo you want to Quit Menu (Press 0):");
+        printf("\nDo you want to Continue Menu (Press 0):");
         scanf("%d", &choice_main);
     } while (choice_main == 0);
-    // DisplayFun(Top);
     return 0;
 }
 
@@ -120,19 +119,12 @@ void Add_Item()
 void Display_DataBase(struct Item *p)
 {
     int count = 1;
-    printf("Sr.No\tName Of Medicine");
     while (p != NULL)
     {
         printf("Product ID :%d\n", p->Product_ID);
         printf("Name :%s\n", p->Name_m);
         printf("Price :%f\n", p->Price_m);
         printf("Quantity :%d\n", p->Quantity);
-        // printf("Date :");
-        // for (int i = 0; i < 5; i++)
-        // {
-        //     printf("%d", p->Date[i]);
-        // }
-
         printf("Use :\n");
         for (int i = 0; i < 5; i++)
         {
@@ -197,9 +189,10 @@ void Stock_Detail()
     printf("\n\n<-----------Stock Detail---------->\n\n");
     printf("1)Update Stock\n");
     printf("2)Add Items in Data Base\n");
-    printf("3)Less Stock(Less than 20)\n");
-    printf("4)Expired Medicine\n");
+    printf("3)Less Stock(Less than 20)\n\n");
+    printf("Choose :");
     int switch_stock_detail, choice_stock_detail, update_product_id;
+    scanf("%d", &switch_stock_detail);
     switch (switch_stock_detail)
     {
     case 1:
@@ -263,30 +256,27 @@ void Less_Stock(struct Item *ptr)
             {
                 printf("%s\t", ptr->Use[i]);
             }
-            
         }
-        ptr =  ptr->next;
+        ptr = ptr->next;
     }
 }
-// void Expire_Item()
 void Bill()
 {
-    //   void Push();
-    //   void Display_Cart(struct Bill *);
-    int Product_ID, choice_bill, choice_product,customer_quantity;
+    system("cls");
+    int Product_ID, choice_bill, choice_product, customer_quantity, switch_bill;
     do
     {
         printf("<----------Cart---------->\n");
         printf("1)Add To Bill\n2)Display Bill\nChoice :");
-        scanf("%d", &choice_bill);
-        switch (choice_bill)
+        scanf("%d", &switch_bill);
+        switch (switch_bill)
         {
         case 1:
             printf("Enter the Product ID :");
             scanf("%d", &choice_product);
             printf("Enter the Quantity :");
-            scanf("%d",&customer_quantity);
-            Push(Head_Item, choice_product,customer_quantity);
+            scanf("%d", &customer_quantity);
+            Push(Head_Item, choice_product, customer_quantity);
             break;
         case 2:
             printf("<-----------MIT Medical Store---------->\n");
@@ -296,7 +286,9 @@ void Bill()
             printf("Please Choice the Correct Option");
             break;
         }
-    } while (choice_bill == 0);
+        printf("\nDo you want to continue Billing(Press 1) :");
+        scanf("%d", &choice_bill);
+    } while (choice_bill == 1);
 }
 void Push(struct Item *Item_ptr, int choice_product, int Customer_quantity)
 {
@@ -309,14 +301,16 @@ void Push(struct Item *Item_ptr, int choice_product, int Customer_quantity)
     {
         if (choice_product == Item_ptr->Product_ID)
         {
+            Flag = 1;
             if (temp == NULL)
             {
                 temp = (struct Bill *)malloc(sizeof(struct Bill));
                 temp->C_Name[30] = Item_ptr->Name_m[30];
                 temp->C_Price = Item_ptr->Price_m;
-                temp->B_Quantity  = Customer_quantity;
+                temp->B_Quantity = Customer_quantity;
+                Item_ptr->Quantity -= Customer_quantity;
                 temp->Next = NULL;
-                
+
                 Top = temp;
             }
             else
@@ -324,7 +318,7 @@ void Push(struct Item *Item_ptr, int choice_product, int Customer_quantity)
                 temp = (struct Bill *)malloc(sizeof(struct Bill));
                 temp->C_Name[30] = Item_ptr->Name_m[30];
                 temp->C_Price = Item_ptr->Price_m;
-                Item_ptr->Quantity  = Customer_quantity;
+                Item_ptr->Quantity = Customer_quantity;
                 temp->Next = Top;
                 Top = temp;
             }
@@ -332,36 +326,39 @@ void Push(struct Item *Item_ptr, int choice_product, int Customer_quantity)
         }
         Item_ptr = Item_ptr->next;
     }
-    if (Flag == 0)
+    if (Flag == 1)
     {
-        printf("Data is not Found.");
+        printf("\n\n!! Medicine Addes !!");
+    }
+    else{
+        printf("\n\n!! Medicine Not Found !!");
     }
 }
 void Display_Cart(struct Bill *p)
 {
+    system("cls");
     struct Bill *temp;
     float Productwise_total;
-     float Total_Bill = 0;
+    float Total_Bill = 0;
     temp = p;
+    printf("\n\n\t<---------------- MIT Medical Store --------------->\n\n");
     if (p == NULL)
     {
-        printf("No Empty Present Inside the ");
+        printf("\n!! No Mediicine is Added !! ");
     }
     else
     {
         while (p != NULL)
         {
-            printf("Name :%s\n", p->C_Name);
-            printf("Price :%f\n", p->C_Price);
-            printf("Quantity :%d\n", p->B_Quantity);
-            Productwise_total = (p->B_Quantity)*(p->C_Price);
-            printf("Product :%f\n",Productwise_total);
-            Total_Bill += Productwise_total ;
+            printf("\t\tName :%s\n", p->C_Name);
+            printf("\t\tPrice :%f\n", p->C_Price);
+            printf("\t\tQuantity :%d\n", p->B_Quantity);
+            Productwise_total = (p->B_Quantity) * (p->C_Price);
+            printf("\t\tProduct :%f\n", Productwise_total);
+            Total_Bill += Productwise_total;
             p = p->Next;
         }
         printf("\n<--------------------------->\n");
-        printf("Total : %f",Total_Bill);
+        printf("Total : %f", Total_Bill);
     }
 }
-
-
