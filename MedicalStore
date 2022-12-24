@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 struct Item
 {
-    char Name_m[30], Use[5][20], Ex_Date[5];
+    char Name_m[30], Use[5][20];
     float Price_m;
     int Quantity, Product_ID;
     struct Item *next;
@@ -24,7 +24,7 @@ void Remove_Item(struct Item *, int);
 void Search_Item(struct Item *, int);
 void Stock_Detail();
 void Cart();
-void Push();
+void Push(struct Item*,int, int);
 void Display_Cart(struct Bill *);
 void Bill();
 // Main Function
@@ -48,7 +48,7 @@ int main()
         {
         case 1:
             Add_Item();
-            system("cls");
+            // system("cls");
             break;
         case 2:
             Display_DataBase(Head_Item);
@@ -140,17 +140,25 @@ void Remove_Item(struct Item *p, int Product_id)
 {
     struct Item *x;
     x = p;
-    while (p != NULL)
+    if (p->Product_ID == Product_id)
     {
-        if (Product_id == p->Product_ID)
-        {
-            x->next = p->next;
-            p->next = NULL;
-            free(p);
-            break;
-        }
-        x = p;
         p = p->next;
+        free(x);
+    }
+    else
+    {
+        while (p != NULL)
+        {
+            if (Product_id == p->Product_ID)
+            {
+                x->next = p->next;
+                p->next = NULL;
+                free(p);
+                break;
+            }
+            x = p;
+            p = p->next;
+        }
     }
 }
 void Search_Item(struct Item *p, int key)
@@ -262,7 +270,7 @@ void Less_Stock(struct Item *ptr)
 }
 void Bill()
 {
-    system("cls");
+    // system("cls");
     int Product_ID, choice_bill, choice_product, customer_quantity, switch_bill;
     do
     {
@@ -305,20 +313,20 @@ void Push(struct Item *Item_ptr, int choice_product, int Customer_quantity)
             if (temp == NULL)
             {
                 temp = (struct Bill *)malloc(sizeof(struct Bill));
-                temp->C_Name[30] = Item_ptr->Name_m[30];
+                strcpy(temp->C_Name,Item_ptr->Name_m);
                 temp->C_Price = Item_ptr->Price_m;
                 temp->B_Quantity = Customer_quantity;
-                Item_ptr->Quantity -= Customer_quantity;
+                Item_ptr->Quantity = Item_ptr->Quantity - Customer_quantity;
                 temp->Next = NULL;
-
                 Top = temp;
             }
             else
             {
                 temp = (struct Bill *)malloc(sizeof(struct Bill));
-                temp->C_Name[30] = Item_ptr->Name_m[30];
+                strcpy(temp->C_Name,Item_ptr->Name_m);
                 temp->C_Price = Item_ptr->Price_m;
                 Item_ptr->Quantity = Customer_quantity;
+                Item_ptr->Quantity = Item_ptr->Quantity - Customer_quantity;
                 temp->Next = Top;
                 Top = temp;
             }
@@ -328,15 +336,16 @@ void Push(struct Item *Item_ptr, int choice_product, int Customer_quantity)
     }
     if (Flag == 1)
     {
-        printf("\n\n!! Medicine Addes !!");
+        printf("\n\n!! Medicine Added !!");
     }
-    else{
+    else
+    {
         printf("\n\n!! Medicine Not Found !!");
     }
 }
 void Display_Cart(struct Bill *p)
 {
-    system("cls");
+    // system("cls");
     struct Bill *temp;
     float Productwise_total;
     float Total_Bill = 0;
@@ -344,7 +353,7 @@ void Display_Cart(struct Bill *p)
     printf("\n\n\t<---------------- MIT Medical Store --------------->\n\n");
     if (p == NULL)
     {
-        printf("\n!! No Mediicine is Added !! ");
+        printf("\n!! No Medicine is Added !! ");
     }
     else
     {
@@ -358,7 +367,7 @@ void Display_Cart(struct Bill *p)
             Total_Bill += Productwise_total;
             p = p->Next;
         }
-        printf("\n<--------------------------->\n");
-        printf("Total : %f", Total_Bill);
+        printf("\n\t\t<--------------------------->\n");
+        printf("\t\tTotal : %f", Total_Bill);
     }
 }
